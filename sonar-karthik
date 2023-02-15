@@ -11,9 +11,9 @@ pipeline{
 				echo "scm checkout stage success"
 				}
 			}
-     }
-      
- 		stage('build stage') {
+
+		stage('build stage') {
+			parallel{
 				stage('first buils stage') {
 					steps{
 						sh 'mvn clean install'
@@ -21,8 +21,30 @@ pipeline{
 						sh 'sleep 20'
 						}
 					}
-         }
-   
+
+				stage('second buils stage') {
+					steps{
+					sh 'mvn clean install'
+						echo "second buils is success"
+						sh 'sleep 20'
+						}
+					}
+				}
+			}
+		stage('test stage') {
+			steps{
+				echo "test stage is success"
+				sh 'sleep 30'
+					}
+				}
+		stage('push to artifact') {
+			steps{
+				echo "pushing an artifact to j jfrog artifact"
+					}
+				}
+			
+		}
+}
    stage('SonarQube Analysis') {
         def mvnHome =  tool name: 'maven-3', type: 'maven'
         withSonarQubeEnv('sonar1') { 
